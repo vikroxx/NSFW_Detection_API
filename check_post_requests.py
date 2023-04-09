@@ -49,7 +49,7 @@ def check_nsfw(base64_image):
             "Content-Type": "application/json"
         }
     data = {
-        "base64": base64_image,
+        "image": base64_image,
     }
 
     # Send the POST request with the image data and headers
@@ -58,10 +58,10 @@ def check_nsfw(base64_image):
     return response
 
 # print(os.listdir('images'))
-for img in tqdm(os.listdir('test1')): 
+for img in tqdm(os.listdir('images')): 
     print('Image : ' , img)
     # print(os.path.join('images' , img))
-    base64_encoded_image = jpeg_to_base64(os.path.join('test1' , img))
+    base64_encoded_image = jpeg_to_base64(os.path.join('images' , img))
     t1 =time.time()
     response = check_nsfw(base64_encoded_image)
     print(time.time() -t1)
@@ -74,7 +74,7 @@ for img in tqdm(os.listdir('test1')):
         try:
             response_json = response.json()
             formatted_json = json.dumps(response_json, indent=4)
-            write_dict_on_image(os.path.join('test1', img), os.path.join('test_output',img), response_json['data'])
+            write_dict_on_image(os.path.join('images', img), os.path.join('output',img), response_json['data'])
 
             # print("Response JSON:\n", formatted_json)
         except ValueError:

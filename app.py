@@ -1,7 +1,7 @@
 # from api import predict, app
 # from api.functions import download_image, process_base64_image
 from functions import download_image, process_base64_image, detect_faces
-
+import json
 from config import PORT
 import os
 import uvicorn
@@ -13,7 +13,7 @@ app = FastAPI()
 
 model = predict.load_model('nsfw_detector/nsfw_model.h5')
 
-@app.post("/verify_nsfw")
+@app.post("/liveness")
 async def detect_nsfw_route(request: Request):
     
     # if not url:
@@ -22,7 +22,7 @@ async def detect_nsfw_route(request: Request):
     # if not image:
     #     return {"ERROR": "IMAGE SIZE TOO LARGE OR INCORRECT URL"}
     data = await request.json()
-    base64= data['base64']
+    base64= data['image']
     image = process_base64_image(base64)
 
     faces = detect_faces(image)
@@ -44,7 +44,8 @@ async def detect_nsfw_route(request: Request):
         results['data']['is_nsfw'] = True
     results['data']['num_faces'] = num_faces
 
-    return results
+    print(json.dumps(results, indent=2))
+    return {'status' : 0}
     
 
 
