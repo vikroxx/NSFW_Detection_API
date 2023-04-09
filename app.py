@@ -6,7 +6,7 @@ from config import PORT
 import os
 import uvicorn
 import numpy as np 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from nsfw_detector import predict
 
 app = FastAPI()
@@ -45,13 +45,16 @@ async def detect_nsfw(url: str):
         return results
 
 
-@app.get("/verify_nsfw")
-async def detect_nsfw_route(base64: str):
+@app.post("/verify_nsfw")
+async def detect_nsfw_route(request: Request):
+    
     # if not url:
     #     return {"ERROR": "URL PARAMETER EMPTY"}
     # image = await download_image(url)
     # if not image:
     #     return {"ERROR": "IMAGE SIZE TOO LARGE OR INCORRECT URL"}
+    data = await request.json()
+    base64= data['base64']
     image = process_base64_image(base64)
     image = np.expand_dims(image, axis=0)
 
