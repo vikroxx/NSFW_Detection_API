@@ -4,10 +4,10 @@ from config import PORT
 import os
 import uvicorn
 import numpy as np 
-from fastapi import FastAPI
-from nsfw_detector import predict
+# from fastapi import FastAPI
+# from nsfw_detector import predict
 
-app = FastAPI()
+# app = FastAPI()
 
 model = predict.load_model('nsfw_detector/nsfw_model.h5')
 
