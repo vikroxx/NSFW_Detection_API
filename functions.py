@@ -27,15 +27,15 @@ async def download_image(url):
     return file_name
 
 
-# def pad_base64(encoded_image):
-#     padding = 4 - (len(encoded_image) % 4)
-#     if padding < 4:
-#         encoded_image += "=" * padding
-#     return encoded_image
+def pad_base64(encoded_image):
+    padding = 4 - (len(encoded_image) % 4)
+    if padding < 4:
+        encoded_image += "=" * padding
+    return encoded_image
 
 def process_base64_image(encoded_image, target_size=(224, 224)):
     # Ensure the base64 string has correct padding
-    # encoded_image = pad_base64(encoded_image)
+    encoded_image = pad_base64(encoded_image)
 
     # Decode the base64 encoded image
     decoded_image = base64.b64decode(encoded_image)
