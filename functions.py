@@ -35,10 +35,14 @@ def pad_base64(encoded_image):
 
 def process_base64_image(encoded_image, target_size=(224, 224)):
     # Ensure the base64 string has correct padding
-    encoded_image = pad_base64(encoded_image)
+    # encoded_image = pad_base64(encoded_image)
 
-    # Decode the base64 encoded image
-    decoded_image = base64.b64decode(encoded_image)
+    # # Decode the base64 encoded image
+    # decoded_image = base64.b64decode(encoded_image)
+
+    base64_data = encoded_image
+    decoded_image = base64.b64decode(base64_data)
+    # nparr = np.frombuffer(decoded_image, np.uint8)
 
     # Convert the decoded image bytes to a PIL image object
     img = Image.open(BytesIO(decoded_image))
