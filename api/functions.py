@@ -3,6 +3,12 @@ from random import randint
 import aiohttp
 import aiofiles
 
+import base64
+import numpy as np
+from PIL import Image
+from io import BytesIO
+
+
 MAX_IMAGE_SIZE = MAX_IMAGE_SIZE * 1000000
 
 
@@ -19,3 +25,31 @@ async def download_image(url):
             else:
                 return False
     return file_name
+
+
+# def pad_base64(encoded_image):
+#     padding = 4 - (len(encoded_image) % 4)
+#     if padding < 4:
+#         encoded_image += "=" * padding
+#     return encoded_image
+
+def process_base64_image(encoded_image, target_size=(224, 224)):
+    # Ensure the base64 string has correct padding
+    # encoded_image = pad_base64(encoded_image)
+
+    # Decode the base64 encoded image
+    decoded_image = base64.b64decode(encoded_image)
+
+    # Convert the decoded image bytes to a PIL image object
+    img = Image.open(BytesIO(decoded_image))
+
+    # Resize the image to the target size
+    img = img.resize(target_size, Image.NEAREST)
+
+    # Convert the PIL image object to a NumPy array
+    img_array = np.asarray(img)
+
+    # Normalize the image data by dividing each pixel value by 255
+    img_array = img_array / 255.0
+
+    return img_array
