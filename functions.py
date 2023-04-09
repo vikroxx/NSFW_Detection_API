@@ -59,3 +59,6 @@ def process_base64_image(encoded_image, target_size=(224, 224)):
     return img_array
 
 
+
+
+
