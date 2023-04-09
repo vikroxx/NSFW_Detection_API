@@ -8,7 +8,7 @@ import numpy as np
 model = predict.load_model('nsfw_detector/nsfw_model.h5')
 
 
-@app.get("/")
+@app.get("/main")
 async def detect_nsfw(url: str):
     if not url:
         return {"ERROR": "URL PARAMETER EMPTY"}
@@ -37,7 +37,7 @@ async def detect_nsfw(url: str):
 
 
 @app.get("/verify_nsfw")
-async def detect_nsfw(base64: str):
+async def detect_nsfw_route(base64: str):
     # if not url:
     #     return {"ERROR": "URL PARAMETER EMPTY"}
     # image = await download_image(url)
