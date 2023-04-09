@@ -8,8 +8,11 @@ import numpy as np
 model = predict.load_model('nsfw_detector/nsfw_model.h5')
 
 
+
+
 @app.get("/main")
 async def detect_nsfw(url: str):
+    return {'status' : 0}
     if not url:
         return {"ERROR": "URL PARAMETER EMPTY"}
     image = await download_image(url)
