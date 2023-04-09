@@ -43,7 +43,7 @@ def write_dict_on_image(image_path, output_path, data_dict, position=(10, 40), f
 
 def check_nsfw(base64_image):
     # Set the API endpoint URL
-    url =  "http://localhost:8000/detect_faces/"
+    url =  "http://15.207.192.148:8001/detect_faces/"
 
     headers = {
             "Content-Type": "application/json"

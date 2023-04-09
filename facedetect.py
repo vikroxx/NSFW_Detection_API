@@ -1,9 +1,9 @@
 import base64
 import cv2
 import numpy as np
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from mtcnn.mtcnn import MTCNN
 
 app = FastAPI()
 
@@ -14,8 +14,9 @@ class DetectionResult(BaseModel):
     faces_detected: int
 
 def detect_faces(image):
-    detector = MTCNN()
-    faces = detector.detect_faces(image)
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
     return faces
 
 @app.post("/detect_faces/", response_model=DetectionResult)
@@ -30,4 +31,6 @@ async def detect_faces_endpoint(image_input: ImageInput):
 
     return result
 
-
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run(app, host="0.0.0.0", port=8000)
