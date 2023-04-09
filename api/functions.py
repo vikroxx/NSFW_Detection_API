@@ -53,3 +53,5 @@ def process_base64_image(encoded_image, target_size=(224, 224)):
     img_array = img_array / 255.0
 
     return img_array
+
+
