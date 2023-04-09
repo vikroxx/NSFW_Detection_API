@@ -7,7 +7,7 @@ import base64
 import numpy as np
 from PIL import Image
 from io import BytesIO
-
+import cv2
 
 MAX_IMAGE_SIZE = MAX_IMAGE_SIZE * 1000000
 
@@ -34,12 +34,6 @@ def pad_base64(encoded_image):
     return encoded_image
 
 def process_base64_image(encoded_image, target_size=(224, 224)):
-    # Ensure the base64 string has correct padding
-    # encoded_image = pad_base64(encoded_image)
-
-    # # Decode the base64 encoded image
-    # decoded_image = base64.b64decode(encoded_image)
-
     base64_data = encoded_image
     decoded_image = base64.b64decode(base64_data)
     # nparr = np.frombuffer(decoded_image, np.uint8)
@@ -54,11 +48,13 @@ def process_base64_image(encoded_image, target_size=(224, 224)):
     img_array = np.asarray(img)
 
     # Normalize the image data by dividing each pixel value by 255
-    img_array = img_array / 255.0
+    # img_array = img_array / 255.0
 
     return img_array
 
 
-
-
-
+def detect_faces(image):
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+    return faces
