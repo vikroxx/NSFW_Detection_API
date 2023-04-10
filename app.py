@@ -43,7 +43,7 @@ async def detect_nsfw_route(request: Request):
     elif num_faces > 1 : 
         return {'status' : 2}
     cv2.imwrite('output_image.jpg', bgr_image)
-    
+
     image = image/255.0
     image = np.expand_dims(image, axis=0)
 
@@ -55,7 +55,7 @@ async def detect_nsfw_route(request: Request):
     drawings = results['data']['drawings']
     neutral = results['data']['neutral']
 
-    if neutral >= 92:
+    if neutral >= 95:
         results['data']['is_nsfw'] = False
     else:
         results['data']['is_nsfw'] = True
