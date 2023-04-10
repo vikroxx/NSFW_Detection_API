@@ -41,6 +41,9 @@ def process_base64_image(encoded_image, target_size=(224, 224)):
     # Convert the decoded image bytes to a PIL image object
     img = Image.open(BytesIO(decoded_image))
     print(img.size)
+    img = crop_image_to_square(img)
+    print(img.size)
+
     img1 = img.resize((300,300), Image.NEAREST)
     # Resize the image to the target size
     img = img.resize(target_size, Image.NEAREST)
@@ -61,3 +64,28 @@ def detect_faces(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
     return faces
+
+from PIL import Image
+
+def crop_image_to_square(img):
+    width, height = img.size
+    
+    if height > width:
+        # Calculate the difference in height and divide by 2
+        delta = (height - width) // 2
+        
+        # Crop the image from the top and bottom
+        cropped_img = img.crop((0, delta, width, height - delta))
+        
+    elif width > height:
+        # Calculate the difference in width and divide by 2
+        delta = (width - height) // 2
+        
+        # Crop the image from the sides
+        cropped_img = img.crop((delta, 0, width - delta, height))
+        
+    else:
+        # Image is already square, no cropping needed
+        cropped_img = img
+
+    return cropped_img
