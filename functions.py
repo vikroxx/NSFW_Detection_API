@@ -41,15 +41,17 @@ def process_base64_image(encoded_image, target_size=(224, 224)):
     # Convert the decoded image bytes to a PIL image object
     img = Image.open(BytesIO(decoded_image))
 
+    img1 = img.resize((600,600), Image.NEAREST)
     # Resize the image to the target size
     img = img.resize(target_size, Image.NEAREST)
 
     # Convert the PIL image object to a NumPy array
     img_array = np.asarray(img)
+    img_array1 = np.asarray(img1)
 
     # Normalize the image data by dividing each pixel value by 255
     # img_array = img_array / 255.0
-    bgr_img_array = img_array[:, :, ::-1]
+    bgr_img_array = img_array1[:, :, ::-1]
 
     return img_array, bgr_img_array
 
