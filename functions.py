@@ -41,7 +41,7 @@ def process_base64_image(encoded_image, target_size=(224, 224)):
     # Convert the decoded image bytes to a PIL image object
     img = Image.open(BytesIO(decoded_image))
 
-    img1 = img.resize((600,600), Image.NEAREST)
+    img1 = img.resize((300,300), Image.NEAREST)
     # Resize the image to the target size
     img = img.resize(target_size, Image.NEAREST)
 

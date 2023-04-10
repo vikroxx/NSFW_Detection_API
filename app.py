@@ -43,6 +43,7 @@ async def detect_nsfw_route(request: Request):
     elif num_faces > 1 : 
         return {'status' : 2}
     cv2.imwrite('output_image.jpg', bgr_image)
+    
     image = image/255.0
     image = np.expand_dims(image, axis=0)
 
