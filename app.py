@@ -8,6 +8,7 @@ import uvicorn
 import numpy as np 
 from fastapi import FastAPI, Request
 from nsfw_detector import predict
+import jwt
 
 app = FastAPI()
 
@@ -15,18 +16,32 @@ model = predict.load_model('nsfw_detector/nsfw_model.h5')
 
 @app.post("/liveness")
 async def detect_nsfw_route(request: Request):
+    token = request.headers.get("token")
+
+    if token is None:
+        return {'status': 2, 'data': 'JWT token not provided!'}
+
+    try:
+        decoded_jwt = jwt.decode(token, "garvita123", algorithms=["HS256"])
+        user_id = decoded_jwt["user_id"]
+    except jwt.exceptions.InvalidTokenError:
+        return {'status': 1, 'data': 'Invalid JWT token!'}
+
+    if user_id != 'image_verification':
+        return {'status': 1, 'data': 'Failed authentication'}
     
-    # if not url:
-    #     return {"ERROR": "URL PARAMETER EMPTY"}
-    # image = await download_image(url)
-    # if not image:
-    #     return {"ERROR": "IMAGE SIZE TOO LARGE OR INCORRECT URL"}
     data = await request.json()
     base64= data['image']
     image = process_base64_image(base64)
 
     faces = detect_faces(image)
     num_faces = len(faces)
+
+    if num_faces  == 0:
+        return { 'status' : 1}
+    elif num_faces > 1 : 
+        return {'status' : 2}
+    
     image = image/255.0
     image = np.expand_dims(image, axis=0)
 
@@ -38,16 +53,16 @@ async def detect_nsfw_route(request: Request):
     drawings = results['data']['drawings']
     neutral = results['data']['neutral']
 
-    if neutral >= 90:
+    if neutral >= 92:
         results['data']['is_nsfw'] = False
     else:
         results['data']['is_nsfw'] = True
     results['data']['num_faces'] = num_faces
 
     print(json.dumps(results, indent=2))
-    return {'status' : 0}
     
-
-
-# if __name__ == "__main__":
-#     uvicorn.run("api:app", host="0.0.0.0", port=PORT, log_level="info", reload = True)
+    if results['data']['is_nsfw']:
+        return {'status' : 4}
+    else:
+        return {'status' : 0}
+    

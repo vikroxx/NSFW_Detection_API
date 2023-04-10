@@ -43,7 +43,7 @@ def write_dict_on_image(image_path, output_path, data_dict, position=(10, 40), f
 
 def check_nsfw(base64_image):
     # Set the API endpoint URL
-    url =  "http://15.207.192.148:8001/verify_nsfw"
+    url =  "http://15.207.192.148:8000/liveness"
 
     headers = {
             "Content-Type": "application/json"
@@ -68,17 +68,17 @@ for img in tqdm(os.listdir('images')):
     if response.status_code == 200:
         # Get the response body as a string
         response_text = response.text
-        # print("Response text:", response_text)
+        print("Response text:", response_text)
 
         # If the response is in JSON format, you can also parse it as a dictionary
-        try:
-            response_json = response.json()
-            formatted_json = json.dumps(response_json, indent=4)
-            write_dict_on_image(os.path.join('images', img), os.path.join('output',img), response_json['data'])
+        # try:
+        #     response_json = response.json()
+        #     formatted_json = json.dumps(response_json, indent=4)
+        #     write_dict_on_image(os.path.join('images', img), os.path.join('output',img), response_json['data'])
 
-            # print("Response JSON:\n", formatted_json)
-        except ValueError:
-            print("The response body is not valid JSON.")
+        #     # print("Response JSON:\n", formatted_json)
+        # except ValueError:
+        #     print("The response body is not valid JSON.")
     else:
         print(f"Request failed with status code {response.status_code}")
 
