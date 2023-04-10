@@ -16,19 +16,19 @@ model = predict.load_model('nsfw_detector/nsfw_model.h5')
 
 @app.post("/liveness")
 async def detect_nsfw_route(request: Request):
-    # token = request.headers.get("token")
+    token = request.headers.get("token")
 
-    # if token is None:
-    #     return {'status': 2, 'data': 'JWT token not provided!'}
+    if token is None:
+        return {'status': 2, 'data': 'JWT token not provided!'}
 
-    # try:
-    #     decoded_jwt = jwt.decode(token, "garvita123", algorithms=["HS256"])
-    #     user_id = decoded_jwt["user_id"]
-    # except jwt.exceptions.InvalidTokenError:
-    #     return {'status': 1, 'data': 'Invalid JWT token!'}
+    try:
+        decoded_jwt = jwt.decode(token, "garvita123", algorithms=["HS256"])
+        user_id = decoded_jwt["user_id"]
+    except jwt.exceptions.InvalidTokenError:
+        return {'status': 1, 'data': 'Invalid JWT token!'}
 
-    # if user_id != 'image_verification':
-    #     return {'status': 1, 'data': 'Failed authentication'}
+    if user_id != 'image_verification':
+        return {'status': 1, 'data': 'Failed authentication'}
     
     data = await request.json()
     base64= data['image']
