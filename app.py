@@ -9,6 +9,7 @@ import numpy as np
 from fastapi import FastAPI, Request
 from nsfw_detector import predict
 import jwt
+import cv2
 
 app = FastAPI()
 
@@ -41,7 +42,7 @@ async def detect_nsfw_route(request: Request):
         return { 'status' : 1}
     elif num_faces > 1 : 
         return {'status' : 2}
-    
+    cv2.imwrite(image, 'output_image.jpg')
     image = image/255.0
     image = np.expand_dims(image, axis=0)
 
