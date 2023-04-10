@@ -49,8 +49,9 @@ def process_base64_image(encoded_image, target_size=(224, 224)):
 
     # Normalize the image data by dividing each pixel value by 255
     # img_array = img_array / 255.0
+    bgr_img_array = img_array[:, :, ::-1]
 
-    return img_array
+    return img_array, bgr_img_array
 
 
 def detect_faces(image):

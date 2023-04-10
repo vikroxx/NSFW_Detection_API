@@ -33,16 +33,16 @@ async def detect_nsfw_route(request: Request):
     
     data = await request.json()
     base64= data['image']
-    image = process_base64_image(base64)
+    image, bgr_image = process_base64_image(base64)
 
-    faces = detect_faces(image)
+    faces = detect_faces(bgr_image)
     num_faces = len(faces)
 
     if num_faces  == 0:
         return { 'status' : 1}
     elif num_faces > 1 : 
         return {'status' : 2}
-    cv2.imwrite('output_image.jpg', image)
+    cv2.imwrite('output_image.jpg', bgr_image)
     image = image/255.0
     image = np.expand_dims(image, axis=0)
 
