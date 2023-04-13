@@ -60,7 +60,7 @@ async def detect_nsfw_route(request: Request):
     cv2.imwrite('output_image.jpg', bgr_image)
 
 
-    if neutral >= 90:
+    if neutral + drawings >= 95:
         results['data']['is_nsfw'] = False
     else:
         results['data']['is_nsfw'] = True
