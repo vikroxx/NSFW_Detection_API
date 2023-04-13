@@ -55,7 +55,7 @@ async def detect_nsfw_route(request: Request):
     drawings = results['data']['drawings']
     neutral = results['data']['neutral']
 
-    if neutral >= 95:
+    if neutral >= 90:
         results['data']['is_nsfw'] = False
     else:
         results['data']['is_nsfw'] = True
