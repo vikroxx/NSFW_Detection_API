@@ -2,12 +2,12 @@ from config import MAX_IMAGE_SIZE
 from random import randint
 import aiohttp
 import aiofiles
-
-import base64
+import cv2
 import numpy as np
+from datetime import datetime
+import base64
 from PIL import Image
 from io import BytesIO
-import cv2
 
 MAX_IMAGE_SIZE = MAX_IMAGE_SIZE * 1000000
 
@@ -89,3 +89,32 @@ def crop_image_to_square(img):
         cropped_img = img
 
     return cropped_img
+
+
+
+
+def save_image_with_dict(image, features_dict, output_dir):
+    # Create a black 300x300 image for the bottom part
+    black_bg = np.zeros((300, 300), dtype=np.uint8)
+
+    # Write the dictionary content on the black background
+    y = 20
+    for key, value in features_dict.items():
+        text = f"{key}: {value}"
+        cv2.putText(black_bg, text, (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        y += 20
+
+    # Convert the black background to a 3-channel image
+    black_bg = cv2.cvtColor(black_bg, cv2.COLOR_GRAY2BGR)
+
+    # Concatenate the original image and the black background with text
+    combined_image = np.concatenate((image, black_bg), axis=0)
+
+    # Create the output file name with the current date and time
+    current_time = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:19]
+    file_name = f"{output_dir}/image_{current_time}.jpg"
+
+    # Save the combined image to the specified directory
+    cv2.imwrite(file_name, combined_image)
+
+

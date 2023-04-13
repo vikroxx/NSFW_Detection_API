@@ -1,6 +1,6 @@
 # from api import predict, app
 # from api.functions import download_image, process_base64_image
-from functions import download_image, process_base64_image, detect_faces
+from functions import download_image, process_base64_image, detect_faces, save_image_with_dict
 import json
 from config import PORT
 import os
@@ -38,28 +38,32 @@ async def detect_nsfw_route(request: Request):
     faces = detect_faces(bgr_image)
     num_faces = len(faces)
 
-    if num_faces  == 0:
-        return { 'status' : 1}
-    elif num_faces > 1 : 
-        return {'status' : 2}
-    cv2.imwrite('output_image.jpg', bgr_image)
-
     image = image/255.0
     image = np.expand_dims(image, axis=0)
 
     probs = predict.classify_nd(model, image)
     results = dict(zip(['data'], probs))
+
+    results['data']['num_faces'] = num_faces
     hentai = results['data']['hentai']
     sexy = results['data']['sexy']
     porn = results['data']['porn']
     drawings = results['data']['drawings']
     neutral = results['data']['neutral']
 
+    save_image_with_dict(bgr_image, results, output_dir= "saved_images")
+
+    if num_faces  == 0:
+        return { 'status' : 1}
+    elif num_faces > 1 : 
+        return {'status' : 2}
+    cv2.imwrite('output_image.jpg', bgr_image)
+
+
     if neutral >= 90:
         results['data']['is_nsfw'] = False
     else:
         results['data']['is_nsfw'] = True
-    results['data']['num_faces'] = num_faces
 
     print(json.dumps(results, indent=2))
     
