@@ -8,6 +8,10 @@ from datetime import datetime
 import base64
 from PIL import Image
 from io import BytesIO
+import json
+from datetime import datetime
+
+
 
 MAX_IMAGE_SIZE = MAX_IMAGE_SIZE * 1000000
 
@@ -65,7 +69,6 @@ def detect_faces(image):
     faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
     return faces
 
-from PIL import Image
 
 def crop_image_to_square(img):
     width, height = img.size
@@ -97,11 +100,16 @@ def save_image_with_dict(image, features_dict, output_dir):
     # Create a black 300x300 image for the bottom part
     black_bg = np.zeros((300, 300), dtype=np.uint8)
 
-    # Write the dictionary content on the black background
+    # Convert dictionary to JSON-formatted string with indentation
+    json_text = json.dumps(features_dict, indent=2)
+    
+    # Split the JSON-formatted string into lines
+    lines = json_text.split('\n')
+
+    # Write the lines on the black background
     y = 20
-    for key, value in features_dict.items():
-        text = f"{key}: {value}"
-        cv2.putText(black_bg, text, (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+    for line in lines:
+        cv2.putText(black_bg, line, (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         y += 20
 
     # Convert the black background to a 3-channel image
@@ -110,11 +118,17 @@ def save_image_with_dict(image, features_dict, output_dir):
     # Concatenate the original image and the black background with text
     combined_image = np.concatenate((image, black_bg), axis=0)
 
-    # Create the output file name with the current date and time
-    current_time = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:19]
+    # Create the output file name with the current date, time, and milliseconds
+
+
+    local_timezone = datetime.now().astimezone().tzinfo
+    current_time = datetime.now(local_timezone).strftime("%Y%m%d_%H%M%S_%f")[:19]
+
     file_name = f"{output_dir}/image_{current_time}.jpg"
 
     # Save the combined image to the specified directory
     cv2.imwrite(file_name, combined_image)
+
+
 
 
