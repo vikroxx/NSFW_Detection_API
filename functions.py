@@ -10,7 +10,7 @@ from PIL import Image
 from io import BytesIO
 import json
 from datetime import datetime
-
+import pytz
 
 
 MAX_IMAGE_SIZE = MAX_IMAGE_SIZE * 1000000
@@ -120,9 +120,11 @@ def save_image_with_dict(image, features_dict, output_dir):
 
     # Create the output file name with the current date, time, and milliseconds
 
-
-    local_timezone = datetime.now().astimezone().tzinfo
-    current_time = datetime.now(local_timezone).strftime("%Y%m%d_%H%M%S_%f")[:19]
+    ist = pytz.timezone('Asia/Kolkata')
+    current_time = datetime.now(ist).strftime("%Y%m%d_%H%M%S_%f")[:19]
+    
+    # local_timezone = datetime.now().astimezone().tzinfo
+    # current_time = datetime.now(local_timezone).strftime("%Y%m%d_%H%M%S_%f")[:19]
 
     file_name = f"{output_dir}/image_{current_time}.jpg"
 
