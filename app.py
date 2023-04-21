@@ -60,7 +60,7 @@ async def detect_nsfw_route(request: Request):
 
     ist_timezone = pytz.timezone('Asia/Kolkata')
     current_time_ist = datetime.now(ist_timezone)
-    results['data']['timestamp'] = current_time_ist
+    results['data']['timestamp'] = current_time_ist.strftime('%Y-%m-%d %H:%M:%S %Z')
 
     print(json.dumps(results, indent=2))
 
