@@ -35,8 +35,8 @@ async def detect_nsfw_route(request: Request):
     base64= data['image']
     image, bgr_image = process_base64_image(base64)
 
-    faces = detect_faces(bgr_image)
-    num_faces = len(faces)
+    # faces = detect_faces(bgr_image)
+    # num_faces = len(faces)
 
     image = image/255.0
     image = np.expand_dims(image, axis=0)
@@ -44,21 +44,12 @@ async def detect_nsfw_route(request: Request):
     probs = predict.classify_nd(model, image)
     results = dict(zip(['data'], probs))
 
-    results['data']['num_faces'] = num_faces
+    # results['data']['num_faces'] = num_faces
     hentai = results['data']['hentai']
     sexy = results['data']['sexy']
     porn = results['data']['porn']
     drawings = results['data']['drawings']
     neutral = results['data']['neutral']
-
-    save_image_with_dict(bgr_image, results, output_dir= "saved_images")
-
-    if num_faces  == 0:
-        return { 'status' : 1}
-    elif num_faces > 1 : 
-        return {'status' : 2}
-    cv2.imwrite('output_image.jpg', bgr_image)
-
 
     if neutral + drawings >= 95:
         results['data']['is_nsfw'] = False
@@ -66,7 +57,16 @@ async def detect_nsfw_route(request: Request):
         results['data']['is_nsfw'] = True
 
     print(json.dumps(results, indent=2))
-    
+
+    save_image_with_dict(bgr_image, results, output_dir= "saved_images")
+
+    # if num_faces  == 0:
+    #     return { 'status' : 1}
+    # elif num_faces > 1 : 
+    #     return {'status' : 2}
+    # cv2.imwrite('output_image.jpg', bgr_image)
+
+
     if results['data']['is_nsfw']:
         return {'status' : 4}
     else:
