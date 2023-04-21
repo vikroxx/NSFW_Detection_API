@@ -10,6 +10,8 @@ from fastapi import FastAPI, Request
 from nsfw_detector import predict
 import jwt
 import cv2
+import pytz
+from datetime import datetime
 
 app = FastAPI()
 
@@ -55,6 +57,10 @@ async def detect_nsfw_route(request: Request):
         results['data']['is_nsfw'] = False
     else:
         results['data']['is_nsfw'] = True
+
+    ist_timezone = pytz.timezone('Asia/Kolkata')
+    current_time_ist = datetime.now(ist_timezone)
+    results['data']['timestamp'] = current_time_ist
 
     print(json.dumps(results, indent=2))
 
