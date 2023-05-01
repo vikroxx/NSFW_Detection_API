@@ -63,6 +63,36 @@ def process_base64_image(encoded_image, target_size=(224, 224)):
     return img_array, bgr_img_array
 
 
+def process_base64_image_ios(encoded_image, target_size=(224, 224)):
+    base64_data = encoded_image
+    decoded_image = base64.b64decode(base64_data)
+    # nparr = np.frombuffer(decoded_image, np.uint8)
+
+    # Convert the decoded image bytes to a PIL image object
+    img = Image.open(BytesIO(decoded_image))
+    print(img.size)
+    img = crop_image_to_square(img)
+    print(img.size)
+
+    # Rotate the image 90 degrees clockwise
+    img = img.rotate(-90)
+    
+    img1 = img.resize((300,300), Image.NEAREST)
+    # Resize the image to the target size
+    img = img.resize(target_size, Image.NEAREST)
+
+    # Convert the PIL image object to a NumPy array
+    img_array = np.asarray(img)
+    img_array1 = np.asarray(img1)
+
+    # Normalize the image data by dividing each pixel value by 255
+    # img_array = img_array / 255.0
+    bgr_img_array = img_array1[:, :, ::-1]
+
+    return img_array, bgr_img_array
+
+
+
 def detect_faces(image):
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)

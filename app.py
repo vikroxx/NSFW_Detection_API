@@ -1,6 +1,6 @@
 # from api import predict, app
 # from api.functions import download_image, process_base64_image
-from functions import download_image, process_base64_image, detect_faces, save_image_with_dict
+from functions import download_image, process_base64_image, detect_faces, save_image_with_dict, process_base64_image_ios
 import json
 from config import PORT
 import os
@@ -37,9 +37,11 @@ async def detect_nsfw_route(request: Request):
     base64= data['image']
     platform  = data['os']
     print(platform)
-    image, bgr_image = process_base64_image(base64)
     if platform =='ios':
-        return {'status' : 0}
+        image, bgr_image = process_base64_image_ios(base64)
+        # return {'status' : 0}
+
+    image, bgr_image = process_base64_image(base64)
 
     # faces = detect_faces(bgr_image)
     # num_faces = len(faces)
