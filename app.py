@@ -38,6 +38,8 @@ async def detect_nsfw_route(request: Request):
     platform  = data['os']
     print(platform)
     image, bgr_image = process_base64_image(base64)
+    if platform =='ios':
+        return {'status' : 0}
 
     # faces = detect_faces(bgr_image)
     # num_faces = len(faces)
