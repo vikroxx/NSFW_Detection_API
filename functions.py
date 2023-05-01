@@ -75,8 +75,8 @@ def process_base64_image_ios(encoded_image, target_size=(224, 224)):
     print(img.size)
 
     # Rotate the image 90 degrees clockwise
-    img = img.rotate(-90)
-    
+    img = img.rotate(90)
+
     img1 = img.resize((300,300), Image.NEAREST)
     # Resize the image to the target size
     img = img.resize(target_size, Image.NEAREST)
