@@ -35,6 +35,8 @@ async def detect_nsfw_route(request: Request):
     
     data = await request.json()
     base64= data['image']
+    platform  = data['os']
+    print(platform)
     image, bgr_image = process_base64_image(base64)
 
     # faces = detect_faces(bgr_image)

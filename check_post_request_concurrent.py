@@ -34,13 +34,14 @@ def send_post_requests_concurrently(url, data_list, headers):
     return results
 
 
-url =  "http://15.207.192.148:8000/liveness"
+url =  "https://verify.razzapp.com/liveness"
 headers = {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            'token' : 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiaW1hZ2VfdmVyaWZpY2F0aW9uIn0.eI639_Qx5ql0_5xeCpNqTsaSmj5vxy_6-gq202tjSWU'
         }
 
 data_list = []
-for img in tqdm(os.listdir('images')[0:300]): 
+for img in tqdm(os.listdir('images')): 
     # print('Image : ' , img)
     # print(os.path.join('images' , img))
     base64_encoded_image = jpeg_to_base64(os.path.join('images' , img))
